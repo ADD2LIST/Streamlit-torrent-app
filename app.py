@@ -78,7 +78,7 @@ def main():
                     st.write("Magnet Link:", torrent['Magnet'])
                     copy_button = st.empty()
                     copy_button.markdown(
-                        f'<a href="data:text/plain;charset=utf-8,{base64.b64encode(torrent["Magnet"].encode()).decode()}" download="magnet.txt">Copy Magnet Link</a>',
+                        f'<button class="btn btn-primary" onclick="copyToClipboard(\'{torrent["Magnet"]}\')">Copy Magnet Link</button>',
                         unsafe_allow_html=True)
                     st.markdown("---")
             else:
@@ -89,4 +89,4 @@ def main():
 
 if __name__ == "__main__":
     main()
-    
+        
