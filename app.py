@@ -2,6 +2,8 @@ import streamlit as st
 import requests
 from bs4 import BeautifulSoup
 import pyperclip
+import base64
+
 
 def pirateBay(query, page='1'):
     allTorrents = []
@@ -44,12 +46,19 @@ def pirateBay(query, page='1'):
 
     return allTorrents
 
+
 def search_torrent(query):
-    results = pirateBay(query)
-    return results
+    result = pirateBay(query)
+
+    if result:
+        return result
+    else:
+        return None
+
 
 def copy_to_clipboard(text):
     pyperclip.copy(text)
+
 
 def main():
     st.title("Torrent Search App")
@@ -67,16 +76,17 @@ def main():
                 for torrent in results:
                     st.write("Name:", torrent['Name'])
                     st.write("Magnet Link:", torrent['Magnet'])
-                    copy_button = st.button("Copy Magnet Link", key=torrent['Name'])
-                    if copy_button:
-                        copy_to_clipboard(torrent['Magnet'])
-                        st.success("Magnet Link copied to clipboard.")
+                    copy_button = st.empty()
+                    copy_button.markdown(
+                        f'<a href="data:text/plain;charset=utf-8,{base64.b64encode(torrent["Magnet"].encode()).decode()}" download="magnet.txt">Copy Magnet Link</a>',
+                        unsafe_allow_html=True)
                     st.markdown("---")
             else:
                 st.warning("No torrents found.")
         else:
             st.warning("Please enter a search query.")
 
+
 if __name__ == "__main__":
     main()
-  
+    
